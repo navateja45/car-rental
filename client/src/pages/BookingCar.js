@@ -9,14 +9,27 @@ import { bookCar } from "../redux/actions/bookingActions";
 import StripeCheckout from "react-stripe-checkout";
 import AOS from 'aos';
 
+import dayjs from 'dayjs';
+// import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+// dayjs.extend(customParseFormat);
+
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 const { RangePicker } = DatePicker;
-function BookingCar({ match }) {
+function BookingCar({ match,props }) {
+  const dateRange = JSON.parse(match.params.daterange);
+  console.log(dateRange);
+  // const {state} = props.location;
+  // console.log(state.startDate);
+
   const { cars } = useSelector((state) => state.carsReducer);
   const { loading } = useSelector((state) => state.alertsReducer);
+
   const [car, setcar] = useState({});
+  
   const dispatch = useDispatch();
-  const [from, setFrom] = useState();
+
+  const [from, setFrom] = useState(null);
   const [to, setTo] = useState();
   const [totalHours, setTotalHours] = useState(0);
   const [driver, setdriver] = useState(false);
@@ -32,18 +45,57 @@ function BookingCar({ match }) {
   }, [cars]);
 
   useEffect(() => {
-    setTotalAmount(totalHours * car.rentPerHour);
+    
+    let ttlamount=parseFloat((totalHours * car.rentPerHour).toFixed(2));
+
+    setTotalAmount(ttlamount);
     if (driver) {
-      setTotalAmount(totalAmount + 30 * totalHours);
+      let ttlamountdriver=parseFloat(totalAmount + 30 * totalHours).toFixed(2);
+
+      setTotalAmount(ttlamountdriver);
     }
-  }, [driver, totalHours]);
+    
+  },[car,driver]);
+
+  const calculateHoursDifference = (dateString1, dateString2) => {
+    const date1 = new Date(dateString1);
+    const date2 = new Date(dateString2);
+
+    // Calculate the difference in milliseconds
+    const timeDifference = Math.abs(date2 - date1);
+
+    // Convert milliseconds to hours
+    // const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+     // Convert milliseconds to hours
+  let hoursDifference = timeDifference / (1000 * 60 * 60);
+
+  // Round up to two decimal points
+  hoursDifference = parseFloat(hoursDifference.toFixed(2));
+
+    return hoursDifference;
+  };
 
   function selectTimeSlots(values) {
-    setFrom(moment(values[0]).format("MMM DD yyyy HH:mm"));
-    setTo(moment(values[1]).format("MMM DD yyyy HH:mm"));
+    setFrom(moment(dateRange.startDate).format("MMM DD yyyy HH:mm"));
+    setTo(moment(dateRange.endDate).format("MMM DD yyyy HH:mm"));
 
-    setTotalHours(values[1].diff(values[0], "hours"));
+    const thours = calculateHoursDifference(dateRange.startDate,dateRange.endDate);
+    setTotalHours(thours);
   }
+
+  console.log(dateRange.startDate)
+  // function selectTimeSlots(values) {
+  //   // console.log(typeof(values[0]))
+  //   setFrom(moment(values[0]).format("MMM DD yyyy HH:mm"));
+  //   setTo(moment(values[1]).format("MMM DD yyyy HH:mm"));
+
+  //   setTotalHours(values[1].diff(values[0], "hours"));
+  // }
+
+  useEffect(() => {
+    selectTimeSlots();
+  },[])
 
   
 
@@ -81,19 +133,24 @@ function BookingCar({ match }) {
             Car Info
           </Divider>
           <div style={{ textAlign: "right" }}>
-            <p>{car.name}</p>
-            <p>{car.rentPerHour} Rent Per hour /-</p>
-            <p>Fuel Type : {car.fuelType}</p>
-            <p>Max Persons : {car.capacity}</p>
+            <p>{car?.name}</p>
+            <p>Fuel Type : {car?.fuelType}</p>
+            <p>Max Persons : {car?.capacity}</p>
+            <p>Car Price : {car?.carprice}</p>
+            <p>Car Mileage : {car?.mileage}</p>
+            <p>Car Bought Year : {car?.year}</p>
           </div>
 
           <Divider type="horizontal" dashed>
             Select Time Slots
           </Divider>
           <RangePicker
-            showTime={{ format: "HH:mm" }}
-            format="MMM DD yyyy HH:mm"
-            onChange={selectTimeSlots}
+            // showTime={{ format: "HH:mm" }}
+            // format="MMM DD yyyy HH:mm"
+            // onChange={selectTimeSlots}
+            // defaultValue={[from,to]}
+            defaultValue={[dayjs(dateRange.startDate , "MMM DD yyyy HH:mm"), dayjs(dateRange.endDate , "MMM DD yyyy HH:mm")]}
+            disabled
           />
           <br />
           <button
@@ -124,7 +181,7 @@ function BookingCar({ match }) {
                 Driver Required
               </Checkbox>
 
-              <h3>Total Amount : {totalAmount}</h3>
+              <h3>Total Amount : {totalAmount === NaN ? 0 : totalAmount}</h3>
 
               <StripeCheckout
                 shippingAddress
@@ -143,7 +200,7 @@ function BookingCar({ match }) {
           )}
         </Col>
 
-        {car.name && (
+        {car?.name && (
           <Modal
             visible={showModal}
             closable={false}

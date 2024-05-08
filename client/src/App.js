@@ -22,7 +22,7 @@ function App() {
              <ProtectedRoute path='/' exact component={Home} />
              <Route path='/login' exact component={Login} />
              <Route path='/register' exact component={Register} />
-             <ProtectedRoute path='/booking/:carid' exact component={BookingCar} />
+             <ProtectedRoute path='/booking/:carid/:daterange' exact component={BookingCar} />
              <ProtectedRoute path='/userbookings' exact component={UserBookings} />
              <ProtectedRoute path='/addcar' exact component={AddCar} />
              <ProtectedRoute path='/editcar/:carid' exact component={EditCar} />

@@ -17,7 +17,7 @@ export const getAllCars=()=>async dispatch=>{
 }
 
 export const addCar=(reqObj)=>async dispatch=>{
-
+    console.log(reqObj);
     dispatch({type: 'LOADING' , payload:true})
 
     try {
@@ -39,6 +39,8 @@ export const addCar=(reqObj)=>async dispatch=>{
 export const editCar=(reqObj)=>async dispatch=>{
 
     dispatch({type: 'LOADING' , payload:true})
+
+    console.log(reqObj);
 
     try {
          await axios.post('http://localhost:5000/api/cars/editcar' , reqObj)

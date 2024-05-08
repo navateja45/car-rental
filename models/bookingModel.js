@@ -12,9 +12,9 @@ const bookingSchema = new mongoose.Schema({
       totalHours : {type : Number},
       totalAmount : {type : Number},
       transactionId : {type : String},
-      driverRequired : {type : Boolean}
+      driverRequired : {type : Boolean},
 
-
+      status: {type: Boolean,default: false},
 },
   {timestamps : true}
 )

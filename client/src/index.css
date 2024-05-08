@@ -99,8 +99,7 @@ button{
   transition: 0.3s;
 }
 .login{
-  background-color:black;
-  ;
+  background-color: black;
   padding-top: 50px;
   min-height: 100vh;
 }
@@ -110,6 +109,7 @@ button{
 }
 .login-form{
   background-color: #1F1F1F;
+  
 }
 .login-form input{
   background-color: #333333 !important;

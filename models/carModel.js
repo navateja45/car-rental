@@ -13,9 +13,10 @@ const carSchema = new mongoose.Schema({
         }
     ] , 
 
-    rentPerHour : {type : Number , required : true}
-
-
+    rentPerHour : {type : Number , required : true},
+    year: {type: Number, required : true},
+    carprice: {type: Number, required : true},
+    mileage: {type: Number,required: true},
 }, {timestamps : true}
 
 )

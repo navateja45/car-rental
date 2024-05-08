@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 
 function DefaultLayout(props) {
     const user = JSON.parse(localStorage.getItem('user'))
+    const mailid = "navateja88011@gmail.com"
   const menu = (
     <Menu>
         <Menu.Item>
@@ -31,6 +32,16 @@ function DefaultLayout(props) {
         Actions
       </a>
     </Menu.Item>}
+        {!user.isAdmin && 
+        <Menu.Item>
+        <a
+          target="_blank"
+          href={`mailto:${mailid}`}
+          rel="noopener noreferrer"
+        >
+          Contact Us
+        </a>
+      </Menu.Item>}
       <Menu.Item onClick={()=>{
           localStorage.removeItem('user');
           window.location.href='/login'
@@ -45,10 +56,11 @@ function DefaultLayout(props) {
           <Row gutter={16} justify='center'>
               <Col lg={20} sm={24} xs={24}>
               <div className="d-flex justify-content-between">
-             <h1 ><b><Link to='/' style={{color:'orangered'}}>Renticle</Link></b></h1>
-
+             <h4><b><Link to='/' style={{color:'orangered'}}>RentWheels </Link></b><br></br><p style={{color:'black',fontSize:"12px"}}>wheels at your fingertips</p></h4>
+             
+             
           <Dropdown overlay={menu} placement="bottomCenter">
-            <Button>{user.username}</Button>
+            <Button style={{marginTop: 'auto', marginBottom: 'auto'}}>{user.username}</Button>
           </Dropdown>
         </div>
               </Col>
@@ -58,10 +70,9 @@ function DefaultLayout(props) {
       <div className="content">{props.children}</div>
 
       <div className="footer text-center">
-      <hr />
-
-         
-          
+        <p>For any queires Contact {" "}
+          <a href="tel:+918464952745">+918464952745</a>
+        </p>
       </div>
     </div>
   );

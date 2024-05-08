@@ -2,7 +2,12 @@ const express = require('express')
 const cors=require('cors')
 const app = express()
 const port = process.env.PORT || 5000
-const dbConnection = require('./db')
+// const dbConnection = require('./db')
+
+const connectDB = require("./db.js");
+
+connectDB();
+
 app.use(cors())
 app.use(express.json())
 
